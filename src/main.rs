@@ -105,14 +105,6 @@ impl<T: Clone + Ord> ParingHeap<T> {
         })
     }
 
-    fn is_empty(&self) -> bool {
-        use ParingHeap::*;
-        match *self {
-            Empty => true,
-            _ => false
-        }
-    }
-
     fn merge(mut self, other: Self) -> Self {
         self.merge_in_place(other);
         self
@@ -153,7 +145,11 @@ impl<T: Ord + Clone> Heap<T> for ParingHeap<T> {
     }
 
     fn empty(&self) -> bool {
-        self.is_empty()
+        use ParingHeap::*;
+        match *self {
+            Empty => true,
+            _ => false
+        }
     }
 
     fn get_min(&self) -> Option<T> {
