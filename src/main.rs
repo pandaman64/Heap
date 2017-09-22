@@ -79,6 +79,15 @@ struct ParingTree<T> {
     subheaps: Vec<ParingTree<T>>
 }
 
+impl<T: Ord> ParingTree<T> {
+    fn merge_in_place(&mut self, mut other: Self) {
+        if self.top > other.top {
+            std::mem::swap(self, &mut other);
+        }
+        self.subheaps.push(other);
+    }
+}
+
 enum ParingHeap<T> {
     Empty,
     Tree(ParingTree<T>)
@@ -117,12 +126,7 @@ impl<T: Clone + Ord> ParingHeap<T> {
             Tree(ref mut tree) => 
                 match other {
                     Empty => return,
-                    Tree(mut other) => {
-                        if tree.top > other.top {
-                            swap(tree, &mut other);
-                        }
-                        tree.subheaps.push(other);
-                    }
+                    Tree(other) => tree.merge_in_place(other)
                 }
         }
     }
@@ -131,10 +135,13 @@ impl<T: Clone + Ord> ParingHeap<T> {
         use ParingHeap::*;
         match iter.next() {
             None => Empty,
-            Some(first) =>
+            Some(mut first) =>
                 match iter.next() {
                     None => Tree(first),
-                    Some(second) => Tree(first).merge(Tree(second)).merge(Self::merge_pairs(iter))
+                    Some(second) => {
+                        first.merge_in_place(second);
+                        Tree(first).merge(Self::merge_pairs(iter))
+                    }
                 }
         }
     }
