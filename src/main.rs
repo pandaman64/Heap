@@ -1,3 +1,7 @@
+#![feature(test)]
+
+extern crate test;
+extern crate rand;
 
 trait Heap<T> {
     fn add(&mut self, v: T);
@@ -184,6 +188,40 @@ fn test(heap: &mut Heap<i32>) {
 
     while !heap.empty() {
         println!("{:?}", heap.remove_min());
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test::Bencher;
+    use rand::Rng;
+
+    #[inline]
+    fn bench<H: Heap<i32>, R: Rng>(heap: &mut H, rng: &mut R) {
+        for x in 1..test::black_box(1000) {
+            if rng.gen() {
+                heap.remove_min();
+            } else {
+                heap.add(x);
+            }
+        }
+    }
+
+    #[bench]
+    fn bench_binary(b: &mut Bencher) {
+        let mut rng = rand::IsaacRng::new_unseeded();
+        let mut heap = BinaryHeap::<i32>::new();
+
+        b.iter(|| bench(&mut heap, &mut rng));
+    }
+
+    #[bench]
+    fn bench_paring(b: &mut Bencher) {
+        let mut rng = rand::IsaacRng::new_unseeded();
+        let mut heap = ParingHeap::<i32>::new();
+
+        b.iter(|| bench(&mut heap, &mut rng));
     }
 }
 
