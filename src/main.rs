@@ -78,12 +78,12 @@ impl<T: Clone + Ord + Default> Heap<T> for BinaryHeap<T> {
     }
 }
 
-struct ParingTree<T> {
+struct PairingTree<T> {
     top: T,
-    subheaps: Vec<ParingTree<T>>
+    subheaps: Vec<PairingTree<T>>
 }
 
-impl<T: Ord> ParingTree<T> {
+impl<T: Ord> PairingTree<T> {
     fn merge_in_place(&mut self, mut other: Self) {
         if self.top > other.top {
             std::mem::swap(self, &mut other);
@@ -92,18 +92,18 @@ impl<T: Ord> ParingTree<T> {
     }
 }
 
-enum ParingHeap<T> {
+enum PairingHeap<T> {
     Empty,
-    Tree(ParingTree<T>)
+    Tree(PairingTree<T>)
 }
 
-impl<T: Clone + Ord> ParingHeap<T> {
+impl<T: Clone + Ord> PairingHeap<T> {
     fn new() -> Self {
-        ParingHeap::Empty
+        PairingHeap::Empty
     }
 
     fn single(v: T) -> Self {
-        ParingHeap::Tree(ParingTree {
+        PairingHeap::Tree(PairingTree {
             top: v,
             subheaps: vec![]
         })
@@ -115,7 +115,7 @@ impl<T: Clone + Ord> ParingHeap<T> {
     }
 
     fn merge_in_place(&mut self, mut other: Self) {
-        use ParingHeap::*;
+        use PairingHeap::*;
         use std::mem::swap;
         match *self {
             Empty => swap(self, &mut other),
@@ -127,8 +127,8 @@ impl<T: Clone + Ord> ParingHeap<T> {
         }
     }
 
-    fn merge_pairs<I: Iterator<Item=ParingTree<T>>>(mut iter: I) -> ParingHeap<T> {
-        use ParingHeap::*;
+    fn merge_pairs<I: Iterator<Item=PairingTree<T>>>(mut iter: I) -> PairingHeap<T> {
+        use PairingHeap::*;
         match iter.next() {
             None => Empty,
             Some(mut first) =>
@@ -143,13 +143,13 @@ impl<T: Clone + Ord> ParingHeap<T> {
     }
 }
 
-impl<T: Ord + Clone> Heap<T> for ParingHeap<T> {
+impl<T: Ord + Clone> Heap<T> for PairingHeap<T> {
     fn add(&mut self, v: T) {
-       self.merge_in_place(ParingHeap::single(v));
+       self.merge_in_place(PairingHeap::single(v));
     }
 
     fn empty(&self) -> bool {
-        use ParingHeap::*;
+        use PairingHeap::*;
         match *self {
             Empty => true,
             _ => false
@@ -157,7 +157,7 @@ impl<T: Ord + Clone> Heap<T> for ParingHeap<T> {
     }
 
     fn get_min(&self) -> Option<T> {
-        use ParingHeap::*;
+        use PairingHeap::*;
         match *self {
             Empty => None,
             Tree(ref tree) => Some(tree.top.clone())
@@ -165,7 +165,7 @@ impl<T: Ord + Clone> Heap<T> for ParingHeap<T> {
     }
 
     fn remove_min(&mut self) -> Option<T> {
-        use ParingHeap::*;
+        use PairingHeap::*;
         use std::mem::replace;
         match replace(self, Empty) {
             Empty => None,
@@ -217,15 +217,15 @@ mod tests {
     }
 
     #[bench]
-    fn bench_paring(b: &mut Bencher) {
+    fn bench_pairing(b: &mut Bencher) {
         let mut rng = rand::IsaacRng::new_unseeded();
-        let mut heap = ParingHeap::<i32>::new();
+        let mut heap = PairingHeap::<i32>::new();
 
         b.iter(|| bench(&mut heap, &mut rng));
     }
 }
 
 fn main() {
-    let mut heap = ParingHeap::new();
+    let mut heap = PairingHeap::new();
     test(&mut heap);    
 }
