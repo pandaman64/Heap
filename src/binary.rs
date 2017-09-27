@@ -38,6 +38,10 @@ impl<T: Clone + Ord + Default> BinaryHeap<T> {
 }
 
 impl<T: Clone + Ord + Default> Heap<T> for BinaryHeap<T> {
+    fn new() -> Self {
+        BinaryHeap::new()
+    }
+
     fn add(&mut self, v: T) {
         self.buffer.push(v);
         let idx = self.size();

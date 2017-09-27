@@ -67,6 +67,10 @@ impl<T: Clone + Ord> PairingHeap<T> {
 }
 
 impl<T: Ord + Clone> Heap<T> for PairingHeap<T> {
+    fn new() -> Self {
+        PairingHeap::new()
+    }
+
     fn add(&mut self, v: T) {
        self.merge_in_place(PairingHeap::single(v));
     }
@@ -99,9 +103,8 @@ impl<T: Ord + Clone> Heap<T> for PairingHeap<T> {
         }
     }
 
-    fn merge_in_place(&mut self, other: &mut Self) {
-        use std::mem::replace;
-        PairingHeap::merge_in_place(self, replace(other, self::PairingHeap::Empty))
+    fn merge_in_place(&mut self, other: Self) {
+        PairingHeap::merge_in_place(self, other)
     }
 }
 

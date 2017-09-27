@@ -43,7 +43,7 @@ mod tests {
         h2.add(1);
         h2.add(3);
         h2.add(6);
-        h1.merge_in_place(&mut h2);
+        h1.merge_in_place(h2);
         
         assert_eq!(h1.remove_min(), Some(1));
         assert_eq!(h1.remove_min(), Some(2));
@@ -123,9 +123,11 @@ mod tests {
                 }
             }
             if rng.gen() {
-                h1.merge_in_place(&mut h2);
+                h1.merge_in_place(h2);
+                h2 = H::new();
             } else {
-                h2.merge_in_place(&mut h1);
+                h2.merge_in_place(h1);
+                h1 = H::new();
             }
         }
     }
