@@ -83,5 +83,10 @@ impl<T: Ord + Clone> Heap<T> for SkewHeap<T> {
             }
         }
     }
+
+    fn merge_in_place(&mut self, other: &mut Self) {
+        use std::mem::replace;
+        SkewHeap::merge_in_place(self, replace(other, self::SkewHeap::Empty));
+    }
 }
 
