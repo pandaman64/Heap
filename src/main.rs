@@ -17,7 +17,7 @@ mod tests {
     use binary::BinaryHeap;
     use pairing::PairingHeap;
     use skew::SkewHeap;
-    
+
     fn test<H: Heap<i32>>(mut heap: H) {
         heap.add(1);
         heap.add(0);
@@ -44,7 +44,7 @@ mod tests {
         h2.add(3);
         h2.add(6);
         h1.merge_in_place(h2);
-        
+
         assert_eq!(h1.remove_min(), Some(1));
         assert_eq!(h1.remove_min(), Some(2));
         assert_eq!(h1.remove_min(), Some(3));
@@ -160,7 +160,7 @@ mod tests {
     fn bench_merge_binary(b: &mut Bencher) {
         let mut rng = rand::IsaacRng::new_unseeded();
 
-        b.iter(||{ 
+        b.iter(|| {
             let h1 = BinaryHeap::<i32>::new();
             let h2 = BinaryHeap::<i32>::new();
             bench_merge(h1, h2, &mut rng)
@@ -171,7 +171,7 @@ mod tests {
     fn bench_merge_pairing(b: &mut Bencher) {
         let mut rng = rand::IsaacRng::new_unseeded();
 
-        b.iter(||{ 
+        b.iter(|| {
             let h1 = PairingHeap::<i32>::new();
             let h2 = PairingHeap::<i32>::new();
             bench_merge(h1, h2, &mut rng)
@@ -182,7 +182,7 @@ mod tests {
     fn bench_merge_skew(b: &mut Bencher) {
         let mut rng = rand::IsaacRng::new_unseeded();
 
-        b.iter(||{ 
+        b.iter(|| {
             let h1 = SkewHeap::<i32>::new();
             let h2 = SkewHeap::<i32>::new();
             bench_merge(h1, h2, &mut rng)
@@ -190,5 +190,4 @@ mod tests {
     }
 }
 
-fn main() {
-}
+fn main() {}

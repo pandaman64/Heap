@@ -1,12 +1,12 @@
 use heap::Heap;
 
 pub struct BinaryHeap<T> {
-    buffer: Vec<T>
+    buffer: Vec<T>,
 }
 
 impl<T: Clone + Ord + Default> BinaryHeap<T> {
     pub fn new() -> Self {
-        BinaryHeap{ buffer: vec![ Default::default() ] }
+        BinaryHeap { buffer: vec![Default::default()] }
     }
 
     fn size(&self) -> usize {
@@ -27,7 +27,9 @@ impl<T: Clone + Ord + Default> BinaryHeap<T> {
         if idx * 2 > self.size() {
             return;
         }
-        if idx * 2 + 1 <= self.size() && self.buffer[idx * 2 + 1] < self.buffer[idx * 2] && self.buffer[idx * 2 + 1] < self.buffer[idx] {
+        if idx * 2 + 1 <= self.size() && self.buffer[idx * 2 + 1] < self.buffer[idx * 2] &&
+            self.buffer[idx * 2 + 1] < self.buffer[idx]
+        {
             self.buffer.swap(idx * 2 + 1, idx);
             self.downheap(idx * 2 + 1);
         } else if self.buffer[idx * 2] < self.buffer[idx] {
@@ -71,4 +73,3 @@ impl<T: Clone + Ord + Default> Heap<T> for BinaryHeap<T> {
         }
     }
 }
-

@@ -8,7 +8,7 @@ pub struct SkewTree<T> {
 
 pub enum SkewHeap<T> {
     Empty,
-    Tree(SkewTree<T>)
+    Tree(SkewTree<T>),
 }
 
 impl<T: Ord> SkewHeap<T> {
@@ -21,7 +21,7 @@ impl<T: Ord> SkewHeap<T> {
         Tree(SkewTree {
             value: value,
             left: Box::new(Empty),
-            right: Box::new(Empty)
+            right: Box::new(Empty),
         })
     }
 
@@ -55,7 +55,7 @@ impl<T: Ord + Clone> Heap<T> for SkewHeap<T> {
         use self::SkewHeap::*;
         match *self {
             Empty => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -63,7 +63,7 @@ impl<T: Ord + Clone> Heap<T> for SkewHeap<T> {
         use self::SkewHeap::*;
         match *self {
             Empty => None,
-            Tree(SkewTree { ref value, .. }) => Some(value.clone())
+            Tree(SkewTree { ref value, .. }) => Some(value.clone()),
         }
     }
 
@@ -74,10 +74,10 @@ impl<T: Ord + Clone> Heap<T> for SkewHeap<T> {
         match replace(self, Empty) {
             Empty => None,
             Tree(SkewTree {
-                value,
-                mut left,
-                right,
-            }) => {
+                     value,
+                     mut left,
+                     right,
+                 }) => {
                 left.merge_in_place(*right);
                 *self = *left;
                 Some(value)
@@ -89,4 +89,3 @@ impl<T: Ord + Clone> Heap<T> for SkewHeap<T> {
         SkewHeap::merge_in_place(self, other);
     }
 }
-

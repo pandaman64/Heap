@@ -3,7 +3,7 @@ use heap::Heap;
 
 pub struct PairingTree<T> {
     top: T,
-    subheaps: Vec<PairingTree<T>>
+    subheaps: Vec<PairingTree<T>>,
 }
 
 impl<T: Ord> PairingTree<T> {
@@ -17,7 +17,7 @@ impl<T: Ord> PairingTree<T> {
 
 pub enum PairingHeap<T> {
     Empty,
-    Tree(PairingTree<T>)
+    Tree(PairingTree<T>),
 }
 
 impl<T: Clone + Ord> PairingHeap<T> {
@@ -28,7 +28,7 @@ impl<T: Clone + Ord> PairingHeap<T> {
     fn single(v: T) -> Self {
         PairingHeap::Tree(PairingTree {
             top: v,
-            subheaps: vec![]
+            subheaps: vec![],
         })
     }
 
@@ -49,11 +49,11 @@ impl<T: Clone + Ord> PairingHeap<T> {
         }
     }
 
-    fn merge_pairs<I: Iterator<Item=PairingTree<T>>>(mut iter: I) -> PairingHeap<T> {
+    fn merge_pairs<I: Iterator<Item = PairingTree<T>>>(mut iter: I) -> PairingHeap<T> {
         use self::PairingHeap::*;
         match iter.next() {
             None => Empty,
-            Some(mut first) =>
+            Some(mut first) => {
                 match iter.next() {
                     None => Tree(first),
                     Some(second) => {
@@ -61,6 +61,7 @@ impl<T: Clone + Ord> PairingHeap<T> {
                         Tree(first).merge(Self::merge_pairs(iter))
                     }
                 }
+            }
         }
     }
 }
@@ -71,14 +72,14 @@ impl<T: Ord + Clone> Heap<T> for PairingHeap<T> {
     }
 
     fn add(&mut self, v: T) {
-       self.merge_in_place(PairingHeap::single(v));
+        self.merge_in_place(PairingHeap::single(v));
     }
 
     fn empty(&self) -> bool {
         use self::PairingHeap::*;
         match *self {
             Empty => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -86,7 +87,7 @@ impl<T: Ord + Clone> Heap<T> for PairingHeap<T> {
         use self::PairingHeap::*;
         match *self {
             Empty => None,
-            Tree(ref tree) => Some(tree.top.clone())
+            Tree(ref tree) => Some(tree.top.clone()),
         }
     }
 
@@ -106,4 +107,3 @@ impl<T: Ord + Clone> Heap<T> for PairingHeap<T> {
         PairingHeap::merge_in_place(self, other)
     }
 }
-
