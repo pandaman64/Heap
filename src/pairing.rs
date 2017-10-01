@@ -40,13 +40,12 @@ impl<T: Clone + Ord> PairingHeap<T> {
     fn merge_in_place(&mut self, mut other: Self) {
         use self::PairingHeap::*;
         use std::mem::swap;
-        match *self {
-            Empty => swap(self, &mut other),
-            Tree(ref mut tree) => 
-                match other {
-                    Empty => return,
-                    Tree(other) => tree.merge_in_place(other)
-                }
+        if let Tree(ref mut tree) = *self {
+            if let Tree(other) = other {
+                tree.merge_in_place(other)
+            }
+        } else {
+            swap(self, &mut other)
         }
     }
 

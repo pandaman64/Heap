@@ -28,19 +28,16 @@ impl<T: Ord> SkewHeap<T> {
     fn merge_in_place(&mut self, mut other: Self) {
         use std::mem::swap;
         use self::SkewHeap::*;
-        match *self {
-            Empty => swap(self, &mut other),
-            Tree(ref mut this) => 
-                match other {
-                    Empty => return,
-                    Tree(mut other) => {
-                        if this.value > other.value {
-                            swap(this, &mut other)
-                        }
-                        this.right.merge_in_place(Tree(other));
-                        swap(&mut this.left, &mut this.right);
-                    }
+        if let Tree(ref mut this) = *self {
+            if let Tree(mut other) = other {
+                if this.value > other.value {
+                    swap(this, &mut other)
                 }
+                this.right.merge_in_place(Tree(other));
+                swap(&mut this.left, &mut this.right);
+            }
+        } else {
+            swap(self, &mut other)
         }
     }
 }
